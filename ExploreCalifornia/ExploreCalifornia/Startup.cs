@@ -28,6 +28,8 @@ namespace ExploreCalifornia
             {
                 DeveloperExceptions = configuration.GetValue<bool>("FeatureToggles:DeveloperExceptions")
             });
+
+            services.AddMvc(option => option.EnableEndpointRouting = false);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,13 +55,15 @@ namespace ExploreCalifornia
 
             }
 
-            app.UseRouting();
+            //app.UseRouting(); not compatible with UseMvc routing
 
-            app.Use(async (context, next) =>
+            app.UseMvc(routes =>
             {
-                if (context.Request.Path.Value.Contains("invalid"))
-                    throw new Exception("ERROR");
-                await next();
+                routes.MapRoute(
+                    "Default",
+                    "{controller=Home}/{action=index}/{id?}"
+                    );
+                //"{controller=Home}/{action=index}/{id:int?}" To use constrains fo rthe url
             });
 
             app.UseFileServer(); //Use folder wwwroot
@@ -78,6 +82,15 @@ namespace ExploreCalifornia
             //    await next();
             //});
 
+            //Routing
+
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path.Value.Contains("invalid"))
+                    throw new Exception("ERROR");
+                await next();
+            });
+
             app.Use(async (context, next) =>
             {
                 if (context.Request.Path.Value.StartsWith("/raquel"))
@@ -93,6 +106,11 @@ namespace ExploreCalifornia
                 {
                     await context.Response.WriteAsync("\r\nHello California Course Example!");
                 }
+            });
+
+            app.Run(async (context) =>
+            {
+                await context.Response.WriteAsync("\r\nHello World Course Example!");
             });
 
             //app.UseEndpoints(endpoints =>
