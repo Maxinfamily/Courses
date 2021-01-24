@@ -21,3 +21,5 @@ C:\Users\max_c\git\Courses\ExploreCalifornia\ExploreCalifornia\obj\Debug\net5.0\
 C:\Users\max_c\git\Courses\ExploreCalifornia\ExploreCalifornia\obj\Debug\net5.0\ref\ExploreCalifornia.dll
 C:\Users\max_c\git\Courses\ExploreCalifornia\ExploreCalifornia\obj\Debug\net5.0\ExploreCalifornia.pdb
 C:\Users\max_c\git\Courses\ExploreCalifornia\ExploreCalifornia\obj\Debug\net5.0\ExploreCalifornia.genruntimeconfig.cache
+C:\Users\max_c\git\Courses\ExploreCalifornia\ExploreCalifornia\bin\Debug\net5.0\appsettings.Production.json
+C:\Users\max_c\git\Courses\ExploreCalifornia\ExploreCalifornia\bin\Debug\net5.0\appsettings.Test.json
