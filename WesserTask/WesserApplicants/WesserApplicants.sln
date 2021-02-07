@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WesserApplicants", "WesserApplicants.csproj", "{FB41CFC0-51EF-48B8-9B17-EFEBD0AD0B50}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB41CFC0-51EF-48B8-9B17-EFEBD0AD0B50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB41CFC0-51EF-48B8-9B17-EFEBD0AD0B50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB41CFC0-51EF-48B8-9B17-EFEBD0AD0B50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB41CFC0-51EF-48B8-9B17-EFEBD0AD0B50}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {64002D92-6AC1-45DB-B267-F76C894EBF48}
+	EndGlobalSection
+EndGlobal
