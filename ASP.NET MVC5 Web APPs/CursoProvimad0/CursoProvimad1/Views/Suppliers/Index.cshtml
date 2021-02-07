@@ -1,0 +1,205 @@
+﻿
+@model IEnumerable<CursoProvimad1.Models.SupplierViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="dvProductList">
+
+</div>
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Crear nuevo", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CompanyName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ContactName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ContactTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.City)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Country)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Phone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Fax)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductsCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AvailableProductsCount)
+        </th>
+        <th>
+
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr id="proveedor-@item.Id">
+        <td>
+            @Html.DisplayFor(modelItem => item.CompanyName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContactName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContactTitle)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.City)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Country)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Phone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fax)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProductsCount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AvailableProductsCount)
+        </td>
+        <td>
+            @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
+            @*@Html.ActionLink("Borrar", "Delete", new { id = item.Id })*@
+            <button type="button" class="btn btn-danger borrar-proveedor" data-borrar="confirmar-delete-@item.Id">Borrar</button>
+        </td>
+        <td>
+            @Ajax.ActionLink("Ver productos", "ProductList",new {id = item.Id}, new AjaxOptions
+            {
+                HttpMethod = "GET",
+                UpdateTargetId = "dvProductList",
+                InsertionMode = InsertionMode.Replace
+            },
+                new {@class ="btn btn-primary"})
+        </td>
+    </tr>
+    <tr id="confirmar-delete-@item.Id"class ="confirmar-delete">
+        <td colspan="12" class="alert alert-danger">
+            ¿<span class="proveedor">Illo</span>, quiereh borrah a @item.CompanyName de verdah de'a wena?
+            @Html.ActionLink("Sí R", "DeleteConfirmed", new {id = item.Id}, new {@class= "btn btn-danger"})
+            <button type="button" class="btn btn-danger" data-borrar-confirmado="proveedor-@item.Id">QUE ZI, HOHTIAAA!!</button>
+            <button type="button" class="btn btn-secondary"  data-borrar="confirmar-delete-@item.Id">No miarma, curpa mia</button>
+            <div id ="error-borrado-@item.Id" class="alert alert-warning"></div>
+        </td>
+ 
+    </tr>
+}
+
+</table>
+
+@section Scripts
+{
+    <script>
+        var g_last_deleted_id;
+        function initialice() {
+            console.log("Inicializando");
+
+            $(".borrar-proveedor").click(confirmarBorrado);
+
+            $(".confirmar-delete .btn-secondary").click(ocultarNo);
+
+            $(".confirmar-delete button.btn-danger").click(borrarDesdeAjax);
+        }
+
+        function fnExito(data) {
+            console.log("Exito", data);
+            $("#proveedor-" + data).remove();
+            $("#confirmar-delete-" + data).remove();
+        }
+
+        function borrarDesdeAjax() {
+            console.log("Borrar Ajax");
+
+            var idBorrar = $(this).attr("data-borrar-confirmado").replace("proveedor-","");
+
+            console.log("Borrar", idBorrar);
+
+            g_last_deleted_id = idBorrar;
+
+            $.ajax({
+                url: '@Url.Action("DeleteAjax", "Suppliers")',
+                data: {id: idBorrar},
+                method: 'get',
+                //success: fnExito, (lo cambio por llamada anónima)
+                error: fnError,
+                success: function(data) {
+                    console.log("Exito anónimo", data);
+                    $("#proveedor-" + data).remove();
+                    $("#confirmar-delete-" + data).remove();
+                }
+            });
+        }
+
+        function fnError(st, b, c) {
+            console.log("fnError.a", st);
+            console.log("fnError.b", b);
+            console.log("fnError.c", c);
+
+            var divName = "#error-borrado-" + g_last_deleted_id;
+
+            $(divName).show();
+            $(divName).text(st.statusText);
+        }
+
+
+        function ocultarNo() {
+
+            console.log( $(this) );
+
+            var miId = $(this).attr("data-borrar");
+
+            console.log("Ocultar id ", miId);
+
+            $('#' + miId).hide("fast");
+        }
+
+        function confirmarBorrado() {
+            console.log("Baja confirmada");
+
+            var miId = $(this).attr("data-borrar");
+
+            console.log("Borrar id ", miId);
+
+            //$(".confirmar-delete").show("slow");
+
+            $('#' + miId).show("slow");
+        }
+
+        function borrar() {
+            console.log("Borrando");
+            var miId = $(this).attr("data-borrar-confirmado");
+            console.log("borrar-id", miId)
+            $('#' + miId).remove();
+            /*
+             **** Funciona, lo comentamos para hacer un ejercicio con parent ****
+            var miId0 = miId.replace("proveedor", "confirmar-delete");
+            console.log("Borran2", miId0);
+            $('#' + miId0).remove();
+            */
+            console.log("Parent", $(this).parent().parent());
+            $(this).parent().parent().remove();
+        }
+
+        $(document).ready(initialice);
+    </script>
+}

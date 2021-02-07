@@ -1,0 +1,152 @@
+﻿@model IEnumerable<CursoProvimad1.Models.CustomerViewModel>
+
+@{
+    ViewBag.Title = "List";
+}
+
+<h2>List</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#modalNewUser">Nuevo</button>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.City)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Country)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Phone)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Country)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {id = item.Id}) |
+                @Html.ActionLink("Details", "Details", new {id = item.Id}) |
+                @Html.ActionLink("Delete", "Delete", new {id = item.Id})
+            </td>
+        </tr>
+    }
+    </tbody>
+
+
+
+</table>
+
+<!-- Modal -->
+<div id="modalNewUser" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Rock solid</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button id="btCrear" type="button" class="btn btn-info">SMASH</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        function initialize() {
+            $.ajax({
+                url: '@Url.Action("CreatePartial", "Customers")',
+                method: "get",
+                dataType: 'html',
+                success: fnExito,
+                error: fnError
+            })
+            $("#btCrear").click(fnCrear);
+        }
+
+        function fnError(st, b, c) {
+            console.log("Error", st);
+        }
+
+        function fnExito(datos) {
+            $("#modalNewUser .modal-body").html(datos);
+        }
+        function fnCrear() {
+
+            console.log("fnCrear");
+            var nombre = $("#FirstName").val();
+            var apellido = $("#LastName").val();
+            var ciudad = $("#City").val();
+            var pais = $("#Country").val();
+            var telefono = $("#Phone").val();
+            $.ajax({
+                url: '@Url.Action("CreateAjax", "Customers")',
+                method: 'post',
+                datType: 'json',
+                error: fnError,
+                success: fnExitoInsert,
+                data: {
+                    FirstName: nombre,
+                    LastName: apellido,
+                    City: ciudad,
+                    Country: pais,
+                    Phone: telefono
+        }
+            })
+        }
+
+        function fnExitoInsert(datos) {
+            console.log("fnExitoInsert", datos)
+            $("#modalNewUser").modal("hide")
+            var nuevaFila = "<tr>" +
+                "<td>"+ datos.FirstName +"</td>" +
+                "<td>"+ datos.LastName +"</td>" +
+                "<td>"+ datos.City +"</td>" +
+                "<td>"+ datos.Country +"</td>" +
+                "<td>"+ datos.Phone +"</td>" +
+                "<td>" +
+                "<a href='/Customers/Edit/" + datos.Id + "'>Edit</a> |" +
+                " <a href='/Customers/Details?id=" + datos.Id + "'>Details</a> |"+
+                " <a href='/Customers/Delete/" + datos.Id + "'>Delete</a>" + 
+                "<td></tr>"
+            $("table tbody").prepend(nuevaFila);
+        }
+
+        $(document).ready(initialize);
+    </script>
+}
